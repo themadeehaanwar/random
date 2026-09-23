@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Target 70kg: Dec 7 Protocol</title>
+  <title>13in13 Protocol Dashboard</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
@@ -19,7 +19,7 @@
     <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg gap-4">
       <div>
         <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-          <i data-lucide="target" class="text-emerald-400"></i> Target 70kg Protocol
+          <i data-lucide="zap" class="text-emerald-400"></i> 13in13 Protocol
         </h1>
         <p class="text-slate-400 text-sm mt-1">Timeline: Sept 1 (82.55kg) → Dec 7 (70.0kg)</p>
       </div>
@@ -53,7 +53,7 @@
     <!-- Daily Input Form -->
     <section class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg">
       <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <i data-lucide="plus-circle" class="text-emerald-400"></i> Daily Morning Check-in
+        <i data-lucide="plus-circle" class="text-emerald-400"></i> Daily Check-in
       </h2>
       <form id="weight-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
         <div>
@@ -73,7 +73,7 @@
     <!-- Chart Visualization -->
     <section class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg">
       <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <i data-lucide="trending-down" class="text-emerald-400"></i> Progress Graph
+        <i data-lucide="trending-down" class="text-emerald-400"></i> 13in13 Progress Graph
       </h2>
       <div class="w-full h-72">
         <canvas id="weightChart"></canvas>
@@ -84,7 +84,7 @@
     <section class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg space-y-4">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-          <i data-lucide="list" class="text-emerald-400"></i> Log History
+          <i data-lucide="list" class="text-emerald-400"></i> History Log
         </h2>
         <div class="flex gap-2">
           <button id="btn-export" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1 border border-slate-600">
@@ -128,7 +128,38 @@
     const TOTAL_DAYS = Math.round((END_DATE - START_DATE) / (1000 * 60 * 60 * 24));
     const DAILY_DROP = (START_WEIGHT - END_WEIGHT) / TOTAL_DAYS;
 
-    let entries = JSON.parse(localStorage.getItem('weight_tracker_entries') || '[]');
+    // Built-in Historical Progress Dataset
+    const DEFAULT_HISTORY = [
+      { date: '2026-08-31', weight: 82.95 },
+      { date: '2026-09-01', weight: 82.55 },
+      { date: '2026-09-02', weight: 81.90 },
+      { date: '2026-09-03', weight: 82.10 },
+      { date: '2026-09-04', weight: 82.55 },
+      { date: '2026-09-05', weight: 82.05 },
+      { date: '2026-09-06', weight: 81.65 },
+      { date: '2026-09-07', weight: 81.65 },
+      { date: '2026-09-08', weight: 81.80 },
+      { date: '2026-09-09', weight: 81.75 },
+      { date: '2026-09-10', weight: 81.10 },
+      { date: '2026-09-11', weight: 80.70 },
+      { date: '2026-09-12', weight: 80.80 },
+      { date: '2026-09-13', weight: 80.25 },
+      { date: '2026-09-14', weight: 80.20 },
+      { date: '2026-09-15', weight: 80.05 },
+      { date: '2026-09-16', weight: 81.45 },
+      { date: '2026-09-17', weight: 80.90 },
+      { date: '2026-09-18', weight: 81.45 },
+      { date: '2026-09-19', weight: 81.75 },
+      { date: '2026-09-20', weight: 81.70 },
+      { date: '2026-09-21', weight: 80.70 },
+      { date: '2026-09-22', weight: 81.25 },
+      { date: '2026-09-23', weight: 80.95 }
+    ];
+
+    // Load from local storage or fallback to built-in dataset
+    let storedData = localStorage.getItem('13in13_tracker_entries');
+    let entries = storedData ? JSON.parse(storedData) : DEFAULT_HISTORY;
+
     let chartInstance = null;
 
     // Calculate Ideal Weight for any given Date string
@@ -142,7 +173,7 @@
 
     // Format Date string nicely
     function formatDate(dateStr) {
-      const options = { month: 'short', day: 'numeric', year: 'numeric' };
+      const options = { month: 'short', day: 'numeric' };
       return new Date(dateStr).toLocaleDateString(undefined, options);
     }
 
@@ -189,7 +220,7 @@
     }
 
     function saveEntries() {
-      localStorage.setItem('weight_tracker_entries', JSON.stringify(entries));
+      localStorage.setItem('13in13_tracker_entries', JSON.stringify(entries));
     }
 
     // Main Render Function
@@ -252,7 +283,7 @@
           <td class="p-3">
             ${isGreen 
               ? `<span class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🟢 On Track</span>`
-              : `<span class="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">🟡 Focus Zone (+${diff})</span>`
+              : `<span class="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">🟡 Retention (+${diff})</span>`
             }
           </td>
           <td class="p-3 text-right">
@@ -269,7 +300,6 @@
     function renderChart() {
       const ctx = document.getElementById('weightChart').getContext('2d');
       
-      // Build date labels spanning from Sept 1 to Dec 7
       let dateLabels = [];
       let idealData = [];
       let actualDataMap = new Map(entries.map(e => [e.date, e.weight]));
@@ -294,11 +324,11 @@
           labels: dateLabels.map(d => formatDate(d)),
           datasets: [
             {
-              label: 'Ideal Weight Track (kg)',
+              label: '13in13 Target (kg)',
               data: idealData,
               borderColor: '#38bdf8',
-              borderWidth: 2,
-              borderDash: [5, 5],
+              borderWidth: 1.5,
+              borderDash: [4, 4],
               pointRadius: 0,
               fill: false,
               tension: 0.1
@@ -308,9 +338,9 @@
               data: actualData,
               borderColor: '#10b981',
               backgroundColor: '#10b981',
-              borderWidth: 3,
-              pointRadius: 4,
-              pointHoverRadius: 6,
+              borderWidth: 2,
+              pointRadius: 2.5,        // Sleek small dots
+              pointHoverRadius: 5,   // Slightly grows on hover
               spanGaps: true,
               tension: 0.2
             }
@@ -322,7 +352,7 @@
           scales: {
             x: {
               grid: { color: 'rgba(51, 65, 85, 0.3)' },
-              ticks: { color: '#94a3b8', maxTicksLimit: 8 }
+              ticks: { color: '#94a3b8', maxTicksLimit: 10 }
             },
             y: {
               grid: { color: 'rgba(51, 65, 85, 0.3)' },
@@ -350,7 +380,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(entries, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `weight_tracker_backup_${new Date().toISOString().split('T')[0]}.json`);
+      downloadAnchor.setAttribute("download", `13in13_backup_${new Date().toISOString().split('T')[0]}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -373,7 +403,7 @@
             entries = importedData;
             saveEntries();
             renderDashboard();
-            alert('Data imported successfully!');
+            alert('13in13 data imported successfully!');
           }
         } catch (err) {
           alert('Invalid JSON backup file.');
