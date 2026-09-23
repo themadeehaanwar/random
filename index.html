@@ -11,101 +11,104 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased p-4 sm:p-6">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased p-3 sm:p-6">
 
-  <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-4xl mx-auto space-y-4 sm:space-y-6">
     
-    <!-- Header Section with Progress Bar -->
-    <header class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+    <!-- Header Section with Days Timeline Progress Bar -->
+    <header class="bg-slate-800/80 p-4 sm:p-5 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
+      <div class="flex justify-between items-center gap-2">
         <div>
-          <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-            <i data-lucide="zap" class="text-emerald-400"></i> 13in13 Protocol
+          <h1 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+            <i data-lucide="zap" class="text-emerald-400 w-5 h-5 sm:w-6 sm:h-6"></i> 13in13 Protocol
           </h1>
-          <p class="text-slate-400 text-xs sm:text-sm mt-0.5">Sept 1 (82.55kg) → Dec 7 (70.00kg)</p>
+          <p class="text-slate-400 text-xs mt-0.5">Sept 1 (82.55kg) → Dec 7 (70.00kg)</p>
         </div>
-        <div class="text-right sm:text-right text-xs sm:text-sm font-semibold text-emerald-400">
-          <span id="progress-text">0.0% Complete</span>
+        <div class="text-right text-xs sm:text-sm font-semibold text-emerald-400 whitespace-nowrap">
+          <span id="progress-text">0.0% Time</span>
         </div>
       </div>
 
-      <!-- Line Progress Bar with Dot Indicator -->
+      <!-- Line Progress Bar with Moving Indicator Dot -->
       <div class="space-y-1.5">
         <div class="relative w-full h-2.5 bg-slate-700/70 rounded-full flex items-center">
-          <!-- Active Filled Line -->
           <div id="progress-fill" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%;"></div>
-          <!-- Moving Indicator Dot -->
           <div id="progress-dot" class="absolute w-4 h-4 bg-emerald-400 border-2 border-slate-900 rounded-full shadow-md transition-all duration-500 -ml-2" style="left: 0%;"></div>
         </div>
-        <div class="flex justify-between text-xs text-slate-400 font-medium pt-1">
+        <div class="flex justify-between text-xs text-slate-400 font-medium pt-0.5">
           <span id="days-elapsed">Day 0 of 97</span>
           <span id="days-remaining">97 Days Remaining</span>
         </div>
       </div>
     </header>
 
-    <!-- Single-Line Full-Width Status Banner -->
-    <div class="bg-slate-800/80 px-5 py-3.5 rounded-2xl border border-slate-700/60 shadow-lg flex items-center justify-between">
-      <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
-        <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Protocol Status
+    <!-- Today's Status Banner -->
+    <div class="bg-slate-800/80 px-4 py-3 rounded-2xl border border-slate-700/60 shadow-lg flex items-center justify-between gap-2">
+      <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5 whitespace-nowrap">
+        <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Today's Status
       </span>
-      <div id="metric-status">
-        <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-700 text-slate-300">Calculating...</span>
+      <div id="metric-status" class="whitespace-nowrap">
+        <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-700 text-slate-300">Calculating...</span>
       </div>
     </div>
 
-    <!-- Metrics Trio Overview -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/50">
-        <span class="text-slate-400 text-xs uppercase tracking-wider font-medium">Latest Weight</span>
-        <div id="metric-latest" class="text-2xl font-bold text-white mt-1">-- kg</div>
+    <!-- Side-by-Side Weights Grid (2 Columns on Mobile) -->
+    <div class="grid grid-cols-2 gap-3">
+      <div class="bg-slate-800/60 p-3.5 sm:p-4 rounded-2xl border border-slate-700/50">
+        <span class="text-slate-400 text-[11px] sm:text-xs uppercase tracking-wider font-semibold block">Latest Weight</span>
+        <div id="metric-latest" class="text-xl sm:text-2xl font-bold text-white mt-1">-- kg</div>
       </div>
-      <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/50">
-        <span class="text-slate-400 text-xs uppercase tracking-wider font-medium">Ideal Today</span>
-        <div id="metric-ideal" class="text-2xl font-bold text-slate-300 mt-1">-- kg</div>
-      </div>
-      <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/50">
-        <span class="text-slate-400 text-xs uppercase tracking-wider font-medium">Total Progress</span>
-        <div id="metric-total-loss" class="text-2xl font-bold text-emerald-400 mt-1">-- kg</div>
+      <div class="bg-slate-800/60 p-3.5 sm:p-4 rounded-2xl border border-slate-700/50">
+        <span class="text-slate-400 text-[11px] sm:text-xs uppercase tracking-wider font-semibold block">Ideal Today</span>
+        <div id="metric-ideal" class="text-xl sm:text-2xl font-bold text-slate-300 mt-1">-- kg</div>
       </div>
     </div>
 
-    <!-- Daily Input Form (Single Compact Row) -->
-    <section class="bg-slate-800/80 p-4 sm:p-5 rounded-2xl border border-slate-700/60 shadow-lg">
-      <form id="weight-form" class="flex flex-col sm:flex-row gap-3 items-center">
-        <div class="w-full sm:w-2/5">
-          <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500 text-sm font-medium" required>
-        </div>
-        <div class="w-full sm:w-2/5">
-          <input type="number" step="0.05" id="input-weight" placeholder="Actual weight (kg)" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500 text-sm font-medium" required>
-        </div>
-        <button type="submit" class="w-full sm:w-1/5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 px-4 rounded-xl transition duration-200 text-sm flex items-center justify-center gap-1.5 shrink-0">
-          <i data-lucide="save" class="w-4 h-4"></i> Save
+    <!-- Total Weight Progress Bar Card -->
+    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-2">
+      <div class="flex justify-between items-center text-xs font-semibold">
+        <span class="text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="target" class="w-4 h-4 text-emerald-400"></i> Total Weight Progress
+        </span>
+        <span id="weight-loss-text" class="text-emerald-400 font-bold">-0.00 / -12.55 kg (0%)</span>
+      </div>
+      <div class="w-full h-2.5 bg-slate-700/70 rounded-full overflow-hidden">
+        <div id="weight-progress-fill" class="h-full bg-emerald-500 transition-all duration-500" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Daily Check-in Form (Strict Single Row) -->
+    <section class="bg-slate-800/80 p-3 sm:p-4 rounded-2xl border border-slate-700/60 shadow-lg">
+      <form id="weight-form" class="flex flex-row gap-2 items-center">
+        <input type="date" id="input-date" class="w-[42%] bg-slate-900 border border-slate-700 text-white rounded-xl px-2.5 py-2 focus:outline-none focus:border-emerald-500 text-xs sm:text-sm font-medium shrink-0" required>
+        <input type="number" step="0.05" id="input-weight" placeholder="Weight (kg)" class="w-[38%] bg-slate-900 border border-slate-700 text-white rounded-xl px-2.5 py-2 focus:outline-none focus:border-emerald-500 text-xs sm:text-sm font-medium shrink-0" required>
+        <button type="submit" class="w-[20%] bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 px-2 rounded-xl transition duration-200 text-xs sm:text-sm flex items-center justify-center gap-1 shrink-0">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i> Save
         </button>
       </form>
     </section>
 
-    <!-- Chart Visualization -->
-    <section class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg">
-      <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <i data-lucide="trending-down" class="text-emerald-400"></i> 13in13 Progress Graph
+    <!-- Progress Graph -->
+    <section class="bg-slate-800/80 p-4 sm:p-5 rounded-2xl border border-slate-700/60 shadow-lg">
+      <h2 class="text-base sm:text-lg font-semibold text-white mb-3 flex items-center gap-2">
+        <i data-lucide="trending-down" class="text-emerald-400 w-4 h-4 sm:w-5 sm:h-5"></i> 13in13 Progress Graph
       </h2>
-      <div class="w-full h-72">
+      <div class="w-full h-64 sm:h-72">
         <canvas id="weightChart"></canvas>
       </div>
     </section>
 
-    <!-- Data Table & Management -->
-    <section class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 shadow-lg space-y-4">
+    <!-- History Log Table -->
+    <section class="bg-slate-800/80 p-4 sm:p-5 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
       <div class="flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-          <i data-lucide="list" class="text-emerald-400"></i> History Log
+        <h2 class="text-base sm:text-lg font-semibold text-white flex items-center gap-2">
+          <i data-lucide="list" class="text-emerald-400 w-4 h-4 sm:w-5 sm:h-5"></i> History Log
         </h2>
         <div class="flex gap-2">
-          <button id="btn-export" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1 border border-slate-600">
+          <button id="btn-export" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1 border border-slate-600">
             <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
           </button>
-          <button id="btn-import-trigger" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1 border border-slate-600">
+          <button id="btn-import-trigger" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1 border border-slate-600">
             <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import
           </button>
           <input type="file" id="input-import" class="hidden" accept=".json">
@@ -113,13 +116,13 @@
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-300">
-          <thead class="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/60 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-700">
             <tr>
-              <th class="p-3">Date</th>
-              <th class="p-3">Actual (kg)</th>
-              <th class="p-3">Ideal (kg)</th>
-              <th class="p-3">Status</th>
+              <th class="p-2 sm:p-3 whitespace-nowrap">Date</th>
+              <th class="p-2 sm:p-3 whitespace-nowrap">Actual</th>
+              <th class="p-2 sm:p-3 whitespace-nowrap">Ideal</th>
+              <th class="p-2 sm:p-3 whitespace-nowrap">Status</th>
             </tr>
           </thead>
           <tbody id="history-tbody" class="divide-y divide-slate-700/50">
@@ -132,17 +135,17 @@
   </div>
 
   <script>
-    // Configuration & Protocol Constants
+    // Protocol Configuration
     const START_DATE = new Date('2026-09-01');
     const END_DATE = new Date('2026-12-07');
     const START_WEIGHT = 82.55;
     const END_WEIGHT = 70.00;
     
-    // Total Days = 97 days
+    // Total Protocol Days = 97
     const TOTAL_DAYS = Math.round((END_DATE - START_DATE) / (1000 * 60 * 60 * 24));
     const DAILY_DROP = (START_WEIGHT - END_WEIGHT) / TOTAL_DAYS;
 
-    // Built-in Historical Progress Dataset
+    // Pre-loaded Baseline Data
     const DEFAULT_HISTORY = [
       { date: '2026-08-31', weight: 82.95 },
       { date: '2026-09-01', weight: 82.55 },
@@ -170,13 +173,11 @@
       { date: '2026-09-23', weight: 80.95 }
     ];
 
-    // Load from local storage or fallback to built-in dataset
     let storedData = localStorage.getItem('13in13_tracker_entries');
     let entries = storedData ? JSON.parse(storedData) : DEFAULT_HISTORY;
 
     let chartInstance = null;
 
-    // Calculate Ideal Weight for any given Date string
     function calculateIdealWeight(dateStr) {
       const targetDate = new Date(dateStr);
       const diffDays = Math.round((targetDate - START_DATE) / (1000 * 60 * 60 * 24));
@@ -185,13 +186,11 @@
       return +(START_WEIGHT - (diffDays * DAILY_DROP)).toFixed(2);
     }
 
-    // Format Date string nicely
     function formatDate(dateStr) {
       const options = { month: 'short', day: 'numeric' };
       return new Date(dateStr).toLocaleDateString(undefined, options);
     }
 
-    // Initialize Page
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       document.getElementById('input-date').valueAsDate = new Date();
@@ -201,7 +200,6 @@
 
     function updateProgressBar() {
       const today = new Date();
-      // Clear time portion for accurate day diff
       today.setHours(0, 0, 0, 0);
       const startDate = new Date(START_DATE);
       startDate.setHours(0, 0, 0, 0);
@@ -211,14 +209,13 @@
       const daysLeft = Math.max(0, TOTAL_DAYS - daysPassed);
       const pct = Math.min(100, Math.max(0, (daysPassed / TOTAL_DAYS) * 100)).toFixed(1);
 
-      document.getElementById('progress-text').textContent = `${pct}% Complete`;
+      document.getElementById('progress-text').textContent = `${pct}% Time`;
       document.getElementById('progress-fill').style.width = `${pct}%`;
       document.getElementById('progress-dot').style.left = `${pct}%`;
       document.getElementById('days-elapsed').textContent = `Day ${daysPassed} of ${TOTAL_DAYS}`;
       document.getElementById('days-remaining').textContent = `${daysLeft} Days Remaining`;
     }
 
-    // Form Submit Handler
     document.getElementById('weight-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const date = document.getElementById('input-date').value;
@@ -243,7 +240,6 @@
       localStorage.setItem('13in13_tracker_entries', JSON.stringify(entries));
     }
 
-    // Main Render Function
     function renderDashboard() {
       renderMetrics();
       renderTable();
@@ -257,16 +253,22 @@
 
       if (entries.length === 0) {
         document.getElementById('metric-latest').textContent = '-- kg';
-        document.getElementById('metric-total-loss').textContent = '-- kg';
         document.getElementById('metric-status').innerHTML = `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-700 text-slate-300">No Data</span>`;
+        document.getElementById('weight-loss-text').textContent = `-0.00 / -12.55 kg (0%)`;
+        document.getElementById('weight-progress-fill').style.width = `0%`;
         return;
       }
 
       const latest = entries[entries.length - 1];
       document.getElementById('metric-latest').textContent = `${latest.weight} kg`;
 
-      const totalLoss = (START_WEIGHT - latest.weight).toFixed(2);
-      document.getElementById('metric-total-loss').textContent = `-${totalLoss} kg`;
+      // Total Weight Progress Calculations
+      const totalTargetLoss = +(START_WEIGHT - END_WEIGHT).toFixed(2); // 12.55 kg
+      const currentLoss = +(START_WEIGHT - latest.weight).toFixed(2); // e.g. 1.60 kg
+      const weightPct = Math.min(100, Math.max(0, (currentLoss / totalTargetLoss) * 100)).toFixed(1);
+
+      document.getElementById('weight-loss-text').textContent = `-${currentLoss.toFixed(2)} / -${totalTargetLoss} kg (${weightPct}%)`;
+      document.getElementById('weight-progress-fill').style.width = `${weightPct}%`;
 
       const idealForLatest = calculateIdealWeight(latest.date);
       const diff = +(latest.weight - idealForLatest).toFixed(2);
@@ -297,13 +299,13 @@
         const row = document.createElement('tr');
         row.className = 'hover:bg-slate-800/40 transition duration-150';
         row.innerHTML = `
-          <td class="p-3 font-medium text-white">${formatDate(entry.date)}</td>
-          <td class="p-3">${entry.weight} kg</td>
-          <td class="p-3 text-slate-400">${ideal} kg</td>
-          <td class="p-3">
+          <td class="p-2 sm:p-3 font-medium text-white whitespace-nowrap">${formatDate(entry.date)}</td>
+          <td class="p-2 sm:p-3 whitespace-nowrap">${entry.weight} kg</td>
+          <td class="p-2 sm:p-3 text-slate-400 whitespace-nowrap">${ideal} kg</td>
+          <td class="p-2 sm:p-3 whitespace-nowrap">
             ${isGreen 
-              ? `<span class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🟢 On Track</span>`
-              : `<span class="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">🟡 Retention (+${diff})</span>`
+              ? `<span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">🟢 On Track</span>`
+              : `<span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">🟡 Retention (+${diff})</span>`
             }
           </td>
         `;
