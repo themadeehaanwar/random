@@ -14,7 +14,7 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased p-3 sm:p-6">
 
   <div class="max-w-4xl mx-auto space-y-3.5 sm:space-y-5">
-    
+
     <!-- Top Header Card: Contains Protocol Info + Both Matching Progress Bars -->
     <header class="bg-slate-800/80 p-4 sm:p-5 rounded-2xl border border-slate-700/60 shadow-lg space-y-4">
       <div>
@@ -147,12 +147,12 @@
     const END_DATE = new Date('2026-12-07');
     const START_WEIGHT = 82.55;
     const END_WEIGHT = 70.00;
-    
+
     // Total Protocol Days = 97
     const TOTAL_DAYS = Math.round((END_DATE - START_DATE) / (1000 * 60 * 60 * 24));
     const DAILY_DROP = (START_WEIGHT - END_WEIGHT) / TOTAL_DAYS;
 
-    // Full Complete Baseline Data History (Aug 31 to Sept 27)
+    // Full Complete Baseline Data History (Aug 31 to Oct 06)
     const DEFAULT_HISTORY = [
       { date: '2026-08-31', weight: 82.95 },
       { date: '2026-09-01', weight: 82.55 },
@@ -181,14 +181,23 @@
       { date: '2026-09-24', weight: 80.25 },
       { date: '2026-09-25', weight: 80.05 },
       { date: '2026-09-26', weight: 79.85 },
-      { date: '2026-09-27', weight: 79.35 }
+      { date: '2026-09-27', weight: 79.35 },
+      { date: '2026-09-28', weight: 79.25 },
+      { date: '2026-09-29', weight: 79.35 },
+      { date: '2026-09-30', weight: 79.30 },
+      { date: '2026-10-01', weight: 79.90 },
+      { date: '2026-10-02', weight: 79.30 },
+      { date: '2026-10-03', weight: 79.50 },
+      { date: '2026-10-04', weight: 78.90 },
+      { date: '2026-10-05', weight: 79.00 },
+      { date: '2026-10-06', weight: 78.90 }
     ];
 
     let storedData = localStorage.getItem('13in13_tracker_entries');
     let entries = storedData ? JSON.parse(storedData) : DEFAULT_HISTORY;
 
-    // Ensure local storage syncs if DEFAULT_HISTORY has more entries than browser cache
-    if (storedData && JSON.parse(storedData).length < DEFAULT_HISTORY.length) {
+    // Force overwrite if stored data length is behind the complete baseline history
+    if (!storedData || JSON.parse(storedData).length < DEFAULT_HISTORY.length) {
       entries = DEFAULT_HISTORY;
       localStorage.setItem('13in13_tracker_entries', JSON.stringify(DEFAULT_HISTORY));
     }
@@ -341,7 +350,7 @@
 
     function renderChart() {
       const ctx = document.getElementById('weightChart').getContext('2d');
-      
+
       let dateLabels = [];
       let idealData = [];
       let actualDataMap = new Map(entries.map(e => [e.date, e.weight]));
